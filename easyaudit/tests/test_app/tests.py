@@ -269,8 +269,7 @@ class TestAuditAdmin(TestCase):
             ['method', 'datetime', ]
         """
         html = str(bs4.BeautifulSoup(content, features="html.parser").find(id="changelist-filter"))
-        filters = re.findall('<h3>\s*By\s*(.*?)\s*</h3>', html)
-        return filters
+        return re.findall('<h3>\s*By\s*(.*?)\s*</h3>', html)
 
     def test_request_event_admin_no_users(self):
         self._setup_superuser(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD)

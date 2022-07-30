@@ -50,10 +50,11 @@ class CRUDEventAdmin(EasyAuditModelAdmin):
             escaped_obj_repr = escape(obj.object_repr)
             try:
                 content_type = self.get_content_type(obj)
-                url = reverse("admin:%s_%s_change" % (
-                    content_type.app_label,
-                    content_type.model,
-                ), args=(obj.object_id,))
+                url = reverse(
+                    f"admin:{content_type.app_label}_{content_type.model}_change",
+                    args=(obj.object_id,),
+                )
+
                 html = '<a href="%s">%s</a>' % (url, escaped_obj_repr)
             except Exception:
                 html = escaped_obj_repr
@@ -91,8 +92,7 @@ class LoginEventAdmin(EasyAuditModelAdmin):
 
     def get_username(self, obj):
         user = self.get_user(obj)
-        username = user.get_username() if user else None
-        return username
+        return user.get_username() if user else None
 
     get_username.short_description = "User name"
 

@@ -54,10 +54,11 @@ class EasyAuditModelAdmin(admin.ModelAdmin):
         escaped = escape(str(user))
         try:
             user_model = get_user_model()
-            url = reverse("admin:%s_%s_change" % (
-                user_model._meta.app_label,
-                user_model._meta.model_name,
-            ), args=(user.id,))
+            url = reverse(
+                f"admin:{user_model._meta.app_label}_{user_model._meta.model_name}_change",
+                args=(user.id,),
+            )
+
             html = '<a href="%s">%s</a>' % (url, escaped)
         except Exception:
             html = escaped
@@ -68,9 +69,7 @@ class EasyAuditModelAdmin(admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request, obj=None):
-        if settings.READONLY_EVENTS:
-            return False
-        return True
+        return not settings.READONLY_EVENTS
 
     def get_urls(self):
         info = self.model._meta.app_label, self.model._meta.model_name
@@ -124,7 +123,10 @@ class EasyAuditModelAdmin(admin.ModelAdmin):
                     modeladmin.message_user(request, _(u'ERROR') + ': %r' % e, messages.ERROR)
             else:
                 modeladmin.message_user(request, _("Action cancelled by user"), messages.SUCCESS);
-            return HttpResponseRedirect(reverse('admin:%s_%s_changelist' % (opts.app_label, opts.model_name)))
+            return HttpResponseRedirect(
+                reverse(f'admin:{opts.app_label}_{opts.model_name}_changelist')
+            )
+
 
         context = {
             "title": _("Purge all %s ... are you sure?") % opts.verbose_name_plural,

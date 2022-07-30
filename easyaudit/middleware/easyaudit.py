@@ -20,8 +20,7 @@ def get_current_request():
 
 
 def get_current_user():
-    request = get_current_request()
-    if request:
+    if request := get_current_request():
         return getattr(request, 'user', None)
 
 

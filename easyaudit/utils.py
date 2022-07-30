@@ -59,7 +59,7 @@ def model_delta(old_model, new_model):
             delta[field.name] = [smart_text(old_value),
                                  smart_text(new_value)]
 
-    if len(delta) == 0:
+    if not delta:
         delta = None
 
     return delta
